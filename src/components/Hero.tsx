@@ -1,6 +1,9 @@
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 export function Hero() {
+  const navigate = useNavigate();
+
   return (
     <div className="relative min-h-screen flex items-center">
       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 dark:from-primary/10 dark:to-secondary/10" />
@@ -15,10 +18,18 @@ export function Hero() {
             of chemicals and laboratory equipment.
           </p>
           <div className="flex gap-4">
-            <Button size="lg" className="bg-primary hover:bg-primary/90">
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => navigate('/products')}
+            >
               Explore Products
             </Button>
-            <Button size="lg" variant="outline">
+            <Button 
+              size="lg" 
+              variant="outline"
+              onClick={() => navigate('/contact')}
+            >
               Contact Us
             </Button>
           </div>
