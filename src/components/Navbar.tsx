@@ -1,5 +1,5 @@
 import { ThemeToggle } from "./ThemeToggle";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -40,6 +40,7 @@ ListItem.displayName = "ListItem";
 
 export function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleCategoryClick = (category: string) => {
     navigate(`/products?category=${category}`);
@@ -61,25 +62,34 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-6">
             <Link 
               to="/" 
-              className="relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              className={cn(
+                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
+                location.pathname === "/" && "text-primary after:scale-x-100"
+              )}
             >
               Home
             </Link>
             <Link 
               to="/about" 
-              className="relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              className={cn(
+                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
+                location.pathname === "/about" && "text-primary after:scale-x-100"
+              )}
             >
               About
             </Link>
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem className="flex items-center h-full">
-                  <Link 
-                    to="/products" 
-                    className="h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                  <NavigationMenuTrigger 
+                    className={cn(
+                      "h-9 px-4 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                      location.pathname === "/products" && "text-primary"
+                    )}
+                    onClick={() => navigate('/products')}
                   >
                     Products
-                  </Link>
+                  </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[800px] lg:grid-cols-3">
                       <ListItem
@@ -149,13 +159,19 @@ export function Navbar() {
             </NavigationMenu>
             <Link 
               to="/team" 
-              className="relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              className={cn(
+                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
+                location.pathname === "/team" && "text-primary after:scale-x-100"
+              )}
             >
               Team
             </Link>
             <Link 
               to="/contact" 
-              className="relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              className={cn(
+                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
+                location.pathname === "/contact" && "text-primary after:scale-x-100"
+              )}
             >
               Contact
             </Link>
