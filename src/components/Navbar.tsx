@@ -43,6 +43,9 @@ export function Navbar() {
 
   const handleCategoryClick = (category: string) => {
     navigate(`/products?category=${category}`);
+    // Close the navigation menu after clicking
+    const event = new Event('click');
+    document.dispatchEvent(event);
   };
 
   return (
@@ -71,9 +74,12 @@ export function Navbar() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem className="flex items-center h-full">
-                  <NavigationMenuTrigger className="h-9 px-4 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active]:bg-accent/50 data-[state=open]:bg-accent/50">
+                  <Link 
+                    to="/products" 
+                    className="h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active]:bg-accent/50 data-[state=open]:bg-accent/50"
+                  >
                     Products
-                  </NavigationMenuTrigger>
+                  </Link>
                   <NavigationMenuContent>
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[800px] lg:grid-cols-3">
                       <ListItem
