@@ -5,14 +5,8 @@ export function Hero() {
   const navigate = useNavigate();
 
   const handleNavigation = (path: string) => {
-    // Get the base URL from Vite's configuration
-    const baseUrl = import.meta.env.BASE_URL || '/';
-    // Remove any trailing slashes from baseUrl and leading slashes from path
-    const cleanBaseUrl = baseUrl.replace(/\/$/, '');
-    const cleanPath = path.replace(/^\//, '');
-    // Combine them with a single slash
-    const fullPath = `${cleanBaseUrl}/${cleanPath}`;
-    window.location.href = `${window.location.origin}/${fullPath}`;
+    // Using navigate from react-router-dom which will handle the routing correctly
+    navigate(path);
   };
 
   return (
@@ -32,14 +26,14 @@ export function Hero() {
             <Button 
               size="lg" 
               className="bg-primary hover:bg-primary/90"
-              onClick={() => handleNavigation('chembio-frontend/#/products')}
+              onClick={() => handleNavigation('/products')}
             >
               Explore Products
             </Button>
             <Button 
               size="lg" 
               variant="outline"
-              onClick={() => handleNavigation('chembio-frontend/#/contact')}
+              onClick={() => handleNavigation('/contact')}
             >
               Contact Us
             </Button>
