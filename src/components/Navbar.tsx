@@ -1,5 +1,5 @@
 import { ThemeToggle } from "./ThemeToggle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,16 +14,17 @@ import React from "react";
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+>(({ className, title, children, onClick, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground cursor-pointer",
             className
           )}
+          onClick={onClick}
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
@@ -38,6 +39,12 @@ const ListItem = React.forwardRef<
 ListItem.displayName = "ListItem";
 
 export function Navbar() {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (category: string) => {
+    navigate(`/products?category=${category}`);
+  };
+
   return (
     <nav className="fixed w-full top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -71,61 +78,61 @@ export function Navbar() {
                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[800px] lg:grid-cols-3">
                       <ListItem
                         title="Chemistry & Biochemicals"
-                        href="/products?category=chemistry-biochemicals"
+                        onClick={() => handleCategoryClick('chemistry-biochemicals')}
                       >
                         High-quality chemicals and biochemical reagents
                       </ListItem>
                       <ListItem
                         title="Laboratory Equipment"
-                        href="/products?category=laboratory-equipment"
+                        onClick={() => handleCategoryClick('laboratory-equipment')}
                       >
                         Professional lab equipment and instruments
                       </ListItem>
                       <ListItem
                         title="Molecular Biology"
-                        href="/products?category=molecular-biology"
+                        onClick={() => handleCategoryClick('molecular-biology')}
                       >
                         Tools and reagents for molecular research
                       </ListItem>
                       <ListItem
                         title="Cell Culture"
-                        href="/products?category=cell-culture"
+                        onClick={() => handleCategoryClick('cell-culture')}
                       >
                         Cell culture media and supplies
                       </ListItem>
                       <ListItem
                         title="Chromatography"
-                        href="/products?category=chromatography"
+                        onClick={() => handleCategoryClick('chromatography')}
                       >
                         Chromatography equipment and supplies
                       </ListItem>
                       <ListItem
                         title="Lab Plasticware"
-                        href="/products?category=lab-plasticware"
+                        onClick={() => handleCategoryClick('lab-plasticware')}
                       >
                         High-quality plastic labware
                       </ListItem>
                       <ListItem
                         title="Safety Equipment"
-                        href="/products?category=safety-equipment"
+                        onClick={() => handleCategoryClick('safety-equipment')}
                       >
                         Laboratory safety gear and equipment
                       </ListItem>
                       <ListItem
                         title="Glass Labware"
-                        href="/products?category=glass-labware"
+                        onClick={() => handleCategoryClick('glass-labware')}
                       >
                         Premium glass laboratory equipment
                       </ListItem>
                       <ListItem
                         title="Lab Consumables"
-                        href="/products?category=lab-consumables"
+                        onClick={() => handleCategoryClick('lab-consumables')}
                       >
                         Essential lab supplies and consumables
                       </ListItem>
                       <ListItem
                         title="Research Instruments"
-                        href="/products?category=research-instruments"
+                        onClick={() => handleCategoryClick('research-instruments')}
                       >
                         Advanced research and analytical instruments
                       </ListItem>
