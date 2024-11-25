@@ -4,9 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
@@ -40,9 +40,12 @@ interface Product {
 
 const Products = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    searchParams.get('category') || "chemistry-biochemicals"
+  );
 
   const categories = [
     {
@@ -990,195 +993,171 @@ const Products = () => {
     }
   ];
 
-  const getSelectedVariant = (productName: string, variants: ProductVariant[]) => {
-    const selectedSku = selectedVariants[productName];
-    return variants.find(v => v.sku === selectedSku) || variants[0];
-  };
+  const filteredCategories = categories.filter(category => 
+    !selectedCategory || category.id === selectedCategory
+  );
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 pt-24 pb-12">
-        <div className="flex flex-col items-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">Our Products</h1>
-          <p className="text-muted-foreground text-center max-w-2xl mb-8">
-            Discover our comprehensive range of high-quality laboratory chemicals and supplies. 
-            All products are sourced from reputable manufacturers and undergo strict quality control.
-          </p>
-          
-          {/* Category Grid */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6">Categories</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-              {categories.map((category) => (
-                <Card
-                  key={category.id}
-                  className={`p-6 cursor-pointer transition-all duration-300 hover:shadow-lg ${
-                    selectedCategory === category.id
-                      ? "border-primary border-2"
-                      : "hover:border-primary"
-                  }`}
-                  onClick={() =>
-                    setSelectedCategory(
-                      selectedCategory === category.id ? null : category.id
-                    )
-                  }
-                >
-                  <div className="flex flex-col items-center text-center space-y-3">
-                    <h3 className="font-semibold">{category.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {category.products.length} Products
-                    </p>
-                  </div>
-                </Card>
-              ))}
+        <div className="flex flex-col space-y-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold">Products</h1>
+              <p className="text-muted-foreground">Browse our extensive catalog of laboratory products</p>
+            </div>
+            <div className="w-full md:w-auto flex items-center gap-4">
+              <div className="relative flex-grow md:flex-grow-0">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search products..."
+                  className="pl-10 w-full md:w-[300px]"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <Select value={selectedCategory || ""} onValueChange={(value) => setSelectedCategory(value)}>
+                <SelectTrigger className="w-full md:w-[200px]">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="w-full max-w-2xl relative mb-8">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search by name, CAS number, or catalogue ID..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4 py-2"
-            />
-          </div>
-        </div>
+          {filteredCategories.map((category) => (
+            <div key={category.id} className="space-y-6">
+              <h2 className="text-2xl font-semibold">{category.name}</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {category.products
+                  .filter(product => 
+                    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    product.description.toLowerCase().includes(searchQuery.toLowerCase())
+                  )
+                  .map((product) => (
+                    <Card key={product.catalogueId} className="flex flex-col">
+                      <CardHeader>
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-48 object-cover rounded-t-lg"
+                        />
+                        <CardTitle>{product.name}</CardTitle>
+                        <CardDescription>{product.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent className="flex-grow space-y-4">
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="font-semibold">Catalogue ID:</span>
+                            <p className="text-muted-foreground">{product.catalogueId}</p>
+                          </div>
+                          <div>
+                            <span className="font-semibold">Brand:</span>
+                            <p className="text-muted-foreground">{product.brand}</p>
+                          </div>
+                          <div>
+                            <span className="font-semibold">CAS Number:</span>
+                            <p className="text-muted-foreground">{product.casNumber}</p>
+                          </div>
+                          {product.purity && (
+                            <div>
+                              <span className="font-semibold">Purity:</span>
+                              <p className="text-muted-foreground">{product.purity}</p>
+                            </div>
+                          )}
+                          {product.grade && (
+                            <div>
+                              <span className="font-semibold">Grade:</span>
+                              <p className="text-muted-foreground">{product.grade}</p>
+                            </div>
+                          )}
+                          <div>
+                            <span className="font-semibold">SKU:</span>
+                            <p className="text-muted-foreground">{product.variants[0].sku}</p>
+                          </div>
+                        </div>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories
-            .filter(category => !selectedCategory || category.id === selectedCategory)
-            .flatMap(category =>
-              category.products.filter(product =>
-                searchQuery === "" ||
-                product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                product.catalogueId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (product.casNumber &&
-                  product.casNumber.toLowerCase().includes(searchQuery.toLowerCase()))
-              )
-            )
-            .map((product, index) => (
-              <Card key={index} className="flex flex-col overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-48 object-cover"
-                />
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    {product.name}
-                    <Badge variant="secondary">{formatIndianPrice(product.variants[0].price)}</Badge>
-                  </CardTitle>
-                  <CardDescription>{product.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="font-semibold">Catalogue ID:</span>
-                      <p className="text-muted-foreground">{product.catalogueId}</p>
-                    </div>
-                    <div>
-                      <span className="font-semibold">Brand:</span>
-                      <p className="text-muted-foreground">{product.brand}</p>
-                    </div>
-                    <div>
-                      <span className="font-semibold">CAS Number:</span>
-                      <p className="text-muted-foreground">{product.casNumber}</p>
-                    </div>
-                    {product.purity && (
-                      <div>
-                        <span className="font-semibold">Purity:</span>
-                        <p className="text-muted-foreground">{product.purity}</p>
-                      </div>
-                    )}
-                    {product.grade && (
-                      <div>
-                        <span className="font-semibold">Grade:</span>
-                        <p className="text-muted-foreground">{product.grade}</p>
-                      </div>
-                    )}
-                    <div>
-                      <span className="font-semibold">SKU:</span>
-                      <p className="text-muted-foreground">{product.variants[0].sku}</p>
-                    </div>
-                  </div>
+                        <div>
+                          <span className="font-semibold">Storage:</span>
+                          <p className="text-muted-foreground text-sm">{product.storage}</p>
+                        </div>
 
-                  <div>
-                    <span className="font-semibold">Storage:</span>
-                    <p className="text-muted-foreground text-sm">{product.storage}</p>
-                  </div>
+                        <div className="space-y-2">
+                          <h4 className="font-semibold">Key Features:</h4>
+                          <ul className="list-disc list-inside text-sm text-muted-foreground">
+                            {product.features.map((feature, idx) => (
+                              <li key={idx}>{feature}</li>
+                            ))}
+                          </ul>
+                        </div>
 
-                  <div className="space-y-2">
-                    <h4 className="font-semibold">Key Features:</h4>
-                    <ul className="list-disc list-inside text-sm text-muted-foreground">
-                      {product.features.map((feature, idx) => (
-                        <li key={idx}>{feature}</li>
-                      ))}
-                    </ul>
-                  </div>
+                        <div className="space-y-2">
+                          <h4 className="font-semibold">Applications:</h4>
+                          <ul className="list-disc list-inside text-sm text-muted-foreground">
+                            {product.applications.map((app, idx) => (
+                              <li key={idx}>{app}</li>
+                            ))}
+                          </ul>
+                        </div>
 
-                  <div className="space-y-2">
-                    <h4 className="font-semibold">Applications:</h4>
-                    <ul className="list-disc list-inside text-sm text-muted-foreground">
-                      {product.applications.map((app, idx) => (
-                        <li key={idx}>{app}</li>
-                      ))}
-                    </ul>
-                  </div>
+                        <div className="space-y-2">
+                          <h4 className="font-semibold">Available From:</h4>
+                          <ul className="list-disc list-inside text-sm text-muted-foreground">
+                            {product.indianSuppliers.map((supplier, idx) => (
+                              <li key={idx}>{supplier}</li>
+                            ))}
+                          </ul>
+                        </div>
 
-                  <div className="space-y-2">
-                    <h4 className="font-semibold">Available From:</h4>
-                    <ul className="list-disc list-inside text-sm text-muted-foreground">
-                      {product.indianSuppliers.map((supplier, idx) => (
-                        <li key={idx}>{supplier}</li>
-                      ))}
-                    </ul>
-                  </div>
+                        <div className="space-y-2">
+                          <h4 className="font-semibold">Certifications:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {product.certifications.map((cert, idx) => (
+                              <Badge key={idx} variant="outline">{cert}</Badge>
+                            ))}
+                          </div>
+                        </div>
 
-                  <div className="space-y-2">
-                    <h4 className="font-semibold">Certifications:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {product.certifications.map((cert, idx) => (
-                        <Badge key={idx} variant="outline">{cert}</Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="flex-grow">
-                      <Select
-                        value={product.variants[0].sku}
-                        onValueChange={(value) => 
-                          setSelectedVariants(prev => ({...prev, [product.name]: value}))
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select size" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {product.variants.map((variant) => (
-                            <SelectItem key={variant.sku} value={variant.sku}>
-                              {variant.size} - {formatIndianPrice(variant.price)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button 
-                      className="flex-shrink-0"
-                      onClick={() => navigate(`/contact?product=${encodeURIComponent(product.name)}&sku=${product.variants[0].sku}`)}
-                    >
-                      Request Quote
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        <div className="flex items-center gap-4">
+                          <div className="flex-grow">
+                            <Select
+                              value={product.variants[0].sku}
+                              onValueChange={(value) => 
+                                setSelectedVariants(prev => ({...prev, [product.name]: value}))
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select size" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {product.variants.map((variant) => (
+                                  <SelectItem key={variant.sku} value={variant.sku}>
+                                    {variant.size} - {formatIndianPrice(variant.price)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <Button 
+                            className="flex-shrink-0"
+                            onClick={() => navigate(`/contact?product=${encodeURIComponent(product.name)}&sku=${product.variants[0].sku}`)}
+                          >
+                            Request Quote
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
       <Footer />
