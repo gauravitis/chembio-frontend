@@ -54,21 +54,30 @@ const AppRoutes = () => {
   );
 };
 
-const App = () => (
-  <ThemeProvider defaultTheme="system" storageKey="chembio-theme">
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Router>
-          <div className="min-h-screen bg-background text-foreground">
-            <Navbar />
-            <AppRoutes />
-          </div>
-        </Router>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+const App = () => {
+  // Force dark mode on initial load
+  if (typeof window !== 'undefined') {
+    const root = window.document.documentElement;
+    root.classList.remove('light');
+    root.classList.add('dark');
+  }
+
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="chembio-theme">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <Router>
+            <div className="min-h-screen bg-background text-foreground">
+              <Navbar />
+              <AppRoutes />
+            </div>
+          </Router>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;
