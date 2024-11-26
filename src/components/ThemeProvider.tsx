@@ -23,54 +23,43 @@ const TRANSITION_DURATION = 0.15;
 export function ThemeProvider({
   children,
   defaultTheme = "dark",
-  storageKey = "vite-ui-theme",
+  storageKey = "chembio-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const savedTheme = localStorage.getItem(storageKey) as Theme;
-    if (savedTheme) return savedTheme;
-    localStorage.setItem(storageKey, "dark");
-    return "dark";
-  });
-
+  // Always initialize with dark theme
+  const [theme, setTheme] = useState<Theme>("dark");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Force dark mode on mount and theme change
   useEffect(() => {
     const root = window.document.documentElement;
+    
+    const forceDarkMode = () => {
+      root.classList.remove("light", "system");
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+      localStorage.setItem(storageKey, "dark");
+    };
 
-    root.classList.remove("light", "dark");
+    // Apply dark mode
+    forceDarkMode();
 
-    setIsTransitioning(true);
+    // Set up an interval to check and reapply dark mode
+    const interval = setInterval(forceDarkMode, 100);
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      root.style.colorScheme = systemTheme;
-    } else {
-      root.classList.add(theme);
-      root.style.colorScheme = theme;
-    }
-
-    const timeout = setTimeout(() => {
-      setIsTransitioning(false);
-    }, TRANSITION_DURATION * 1000);
-
-    return () => clearTimeout(timeout);
-  }, [theme]);
-
-  useEffect(() => {
-    localStorage.setItem(storageKey, theme);
-  }, [theme, storageKey]);
+    // Clean up
+    return () => clearInterval(interval);
+  }, [storageKey]);
 
   const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    theme: "dark",
+    setTheme: () => {
+      // Always keep dark theme
+      const root = window.document.documentElement;
+      root.classList.remove("light", "system");
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+      localStorage.setItem(storageKey, "dark");
     },
   };
 

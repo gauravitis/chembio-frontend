@@ -55,11 +55,21 @@ const AppRoutes = () => {
 };
 
 const App = () => {
-  // Force dark mode on initial load
+  // Force dark mode on mount
   if (typeof window !== 'undefined') {
-    const root = window.document.documentElement;
-    root.classList.remove('light');
-    root.classList.add('dark');
+    const forceDarkMode = () => {
+      const root = window.document.documentElement;
+      root.classList.remove('light', 'system');
+      root.classList.add('dark');
+      root.style.colorScheme = 'dark';
+      localStorage.setItem('chembio-theme', 'dark');
+    };
+
+    // Apply immediately
+    forceDarkMode();
+
+    // Set up an interval to keep checking
+    setInterval(forceDarkMode, 100);
   }
 
   return (
@@ -69,7 +79,7 @@ const App = () => {
           <Toaster />
           <Sonner />
           <Router>
-            <div className="min-h-screen bg-background text-foreground">
+            <div className="min-h-screen bg-background text-foreground dark">
               <Navbar />
               <AppRoutes />
             </div>
