@@ -8,8 +8,18 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { Button } from "./ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { motion } from "framer-motion";
+import { MobileNav } from "./MobileNav";
+import { UserCircle2 } from "lucide-react";
 
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
@@ -38,6 +48,13 @@ const ListItem = React.forwardRef<
 });
 ListItem.displayName = "ListItem";
 
+const navItems = [
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Team", path: "/team" },
+  { name: "Contact", path: "/contact" },
+];
+
 export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,135 +67,159 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed w-full top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm">
+    <motion.nav
+      className="fixed w-full top-0 z-50 bg-background/80 backdrop-blur-lg border-b shadow-sm"
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+      }}
+    >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <Link 
-            to="/" 
-            className="text-2xl font-bold text-primary hover:opacity-90 transition-opacity"
+        <Link 
+          to="/" 
+          className="flex items-center space-x-2"
+        >
+          <motion.span 
+            className="text-2xl font-bold text-primary"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             Chembio Lifescience
-          </Link>
-          <div className="hidden md:flex items-center space-x-6">
-            <Link 
-              to="/" 
+          </motion.span>
+        </Link>
+
+        <nav className="hidden md:flex items-center space-x-8">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
               className={cn(
-                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
-                location.pathname === "/" && "text-primary after:scale-x-100"
+                "text-sm font-medium transition-colors hover:text-primary relative",
+                location.pathname === item.path
+                  ? "text-primary"
+                  : "text-muted-foreground"
               )}
             >
-              Home
-            </Link>
-            <Link 
-              to="/about" 
-              className={cn(
-                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
-                location.pathname === "/about" && "text-primary after:scale-x-100"
+              {item.name}
+              {location.pathname === item.path && (
+                <motion.div
+                  className="absolute -bottom-[27px] left-0 right-0 h-[2px] bg-primary"
+                  layoutId="navbar-indicator"
+                  transition={{
+                    type: "spring",
+                    stiffness: 380,
+                    damping: 30,
+                  }}
+                />
               )}
-            >
-              About
             </Link>
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem className="flex items-center h-full">
-                  <NavigationMenuTrigger 
-                    className={cn(
-                      "h-9 px-4 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
-                      location.pathname === "/products" && "text-primary"
-                    )}
-                    onClick={() => navigate('/products')}
-                  >
-                    Products
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[800px] lg:grid-cols-3">
-                      <ListItem
-                        title="Chemistry & Biochemicals"
-                        onClick={() => handleCategoryClick('chemistry-biochemicals')}
-                      >
-                        High-quality chemicals and biochemical reagents
-                      </ListItem>
-                      <ListItem
-                        title="Laboratory Equipment"
-                        onClick={() => handleCategoryClick('laboratory-equipment')}
-                      >
-                        Professional lab equipment and instruments
-                      </ListItem>
-                      <ListItem
-                        title="Molecular Biology"
-                        onClick={() => handleCategoryClick('molecular-biology')}
-                      >
-                        Tools and reagents for molecular research
-                      </ListItem>
-                      <ListItem
-                        title="Cell Culture"
-                        onClick={() => handleCategoryClick('cell-culture')}
-                      >
-                        Cell culture media and supplies
-                      </ListItem>
-                      <ListItem
-                        title="Chromatography"
-                        onClick={() => handleCategoryClick('chromatography')}
-                      >
-                        Chromatography equipment and supplies
-                      </ListItem>
-                      <ListItem
-                        title="Lab Plasticware"
-                        onClick={() => handleCategoryClick('lab-plasticware')}
-                      >
-                        High-quality plastic labware
-                      </ListItem>
-                      <ListItem
-                        title="Safety Equipment"
-                        onClick={() => handleCategoryClick('safety-equipment')}
-                      >
-                        Laboratory safety gear and equipment
-                      </ListItem>
-                      <ListItem
-                        title="Glass Labware"
-                        onClick={() => handleCategoryClick('glass-labware')}
-                      >
-                        Premium glass laboratory equipment
-                      </ListItem>
-                      <ListItem
-                        title="Lab Consumables"
-                        onClick={() => handleCategoryClick('lab-consumables')}
-                      >
-                        Essential lab supplies and consumables
-                      </ListItem>
-                      <ListItem
-                        title="Research Instruments"
-                        onClick={() => handleCategoryClick('research-instruments')}
-                      >
-                        Advanced research and analytical instruments
-                      </ListItem>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <Link 
-              to="/team" 
-              className={cn(
-                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
-                location.pathname === "/team" && "text-primary after:scale-x-100"
-              )}
-            >
-              Team
-            </Link>
-            <Link 
-              to="/contact" 
-              className={cn(
-                "relative py-2 hover:text-primary transition-colors after:content-[''] after:absolute after:w-full after:h-0.5 after:bg-primary after:left-0 after:bottom-0 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300",
-                location.pathname === "/contact" && "text-primary after:scale-x-100"
-              )}
-            >
-              Contact
-            </Link>
-          </div>
+          ))}
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem className="flex items-center h-full">
+                <NavigationMenuTrigger 
+                  className={cn(
+                    "h-9 px-4 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[active]:bg-accent/50 data-[state=open]:bg-accent/50",
+                    location.pathname === "/products" && "text-primary"
+                  )}
+                  onClick={() => navigate('/products')}
+                >
+                  Products
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[800px] lg:grid-cols-3">
+                    <ListItem
+                      title="Chemistry & Biochemicals"
+                      onClick={() => handleCategoryClick('chemistry-biochemicals')}
+                    >
+                      High-quality chemicals and biochemical reagents
+                    </ListItem>
+                    <ListItem
+                      title="Laboratory Equipment"
+                      onClick={() => handleCategoryClick('laboratory-equipment')}
+                    >
+                      Professional lab equipment and instruments
+                    </ListItem>
+                    <ListItem
+                      title="Molecular Biology"
+                      onClick={() => handleCategoryClick('molecular-biology')}
+                    >
+                      Tools and reagents for molecular research
+                    </ListItem>
+                    <ListItem
+                      title="Cell Culture"
+                      onClick={() => handleCategoryClick('cell-culture')}
+                    >
+                      Cell culture media and supplies
+                    </ListItem>
+                    <ListItem
+                      title="Chromatography"
+                      onClick={() => handleCategoryClick('chromatography')}
+                    >
+                      Chromatography equipment and supplies
+                    </ListItem>
+                    <ListItem
+                      title="Lab Plasticware"
+                      onClick={() => handleCategoryClick('lab-plasticware')}
+                    >
+                      High-quality plastic labware
+                    </ListItem>
+                    <ListItem
+                      title="Safety Equipment"
+                      onClick={() => handleCategoryClick('safety-equipment')}
+                    >
+                      Laboratory safety gear and equipment
+                    </ListItem>
+                    <ListItem
+                      title="Glass Labware"
+                      onClick={() => handleCategoryClick('glass-labware')}
+                    >
+                      Premium glass laboratory equipment
+                    </ListItem>
+                    <ListItem
+                      title="Lab Consumables"
+                      onClick={() => handleCategoryClick('lab-consumables')}
+                    >
+                      Essential lab supplies and consumables
+                    </ListItem>
+                    <ListItem
+                      title="Research Instruments"
+                      onClick={() => handleCategoryClick('research-instruments')}
+                    >
+                      Advanced research and analytical instruments
+                    </ListItem>
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </nav>
+
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative"
+                  onClick={() => navigate('/admin')}
+                >
+                  <UserCircle2 className="h-5 w-5 transition-colors hover:text-primary" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Admin Login</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <MobileNav />
         </div>
-        <ThemeToggle />
       </div>
-    </nav>
+    </motion.nav>
   );
 }

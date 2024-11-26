@@ -5,10 +5,11 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/chembio-frontend/',  // Add this line for GitHub Pages
+  base: '/',  // Changed to root path for local development
   server: {
-    host: "::",
-    port: 8080,
+    host: 'localhost',
+    port: 3000,
+    open: true, // This will automatically open the browser
   },
   plugins: [
     react(),
