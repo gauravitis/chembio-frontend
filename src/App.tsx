@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
@@ -55,35 +55,18 @@ const AppRoutes = () => {
 };
 
 const App = () => {
-  // Force dark mode on mount
-  if (typeof window !== 'undefined') {
-    const forceDarkMode = () => {
-      const root = window.document.documentElement;
-      root.classList.remove('light', 'system');
-      root.classList.add('dark');
-      root.style.colorScheme = 'dark';
-      localStorage.setItem('chembio-theme', 'dark');
-    };
-
-    // Apply immediately
-    forceDarkMode();
-
-    // Set up an interval to keep checking
-    setInterval(forceDarkMode, 100);
-  }
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="chembio-theme">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <Router>
-            <div className="min-h-screen bg-background text-foreground dark">
+          <BrowserRouter basename="/chembio-frontend">
+            <div className="min-h-screen bg-background text-foreground">
               <Navbar />
               <AppRoutes />
             </div>
-          </Router>
+          </BrowserRouter>
+          <Toaster />
+          <Sonner />
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
