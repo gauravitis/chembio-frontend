@@ -55,7 +55,7 @@ const About = () => {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4">
-                Founded in 2010, Chembio Lifescience emerged from a vision to bridge the gap between cutting-edge research and practical applications in the chemical and biological sciences. What started as a small laboratory with a team of dedicated scientists has grown into a leading provider of research tools and solutions.
+                Founded in 2016, Chembio Lifescience emerged from a vision to bridge the gap between cutting-edge research and practical applications in the chemical and biological sciences. What started as a small company with a team of dedicated team members has grown into a leading provider of research tools and solutions.
               </p>
               <p className="text-muted-foreground">
                 Over the years, we have expanded our portfolio to include a comprehensive range of products serving various fields including analytical chemistry, biochemistry, and material science. Our commitment to quality and innovation has earned us the trust of research institutions, pharmaceutical companies, and industrial laboratories worldwide.

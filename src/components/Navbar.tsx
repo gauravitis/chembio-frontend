@@ -53,6 +53,7 @@ const navItems = [
   { name: "About", path: "/about" },
   { name: "Team", path: "/team" },
   { name: "Contact", path: "/contact" },
+  { name: "FAQ", path: "/faq" },
 ];
 
 export function Navbar() {

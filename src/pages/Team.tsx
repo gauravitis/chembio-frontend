@@ -5,13 +5,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const Team = () => {
   const leadership = [
     {
-      name: "Jagdish Kausal",
+      name: "Jagdish Kaushal",
       role: "Managing Director",
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop",
       bio: "Visionary leader with over 25 years of experience in industrial automation and process control"
     },
     {
-      name: "Rajni Kausal",
+      name: "Rajni Kaushal",
       role: "Managing Director",
       image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
       bio: "Strategic business leader specializing in organizational growth and operational excellence"
@@ -20,44 +20,44 @@ const Team = () => {
 
   const experts = [
     {
-      name: "Dr. Sarah Johnson",
-      role: "Chief Scientific Officer",
+      name: "Rajendra Jadaoun",
+      role: "Administrator",
       image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop",
       bio: "Ph.D. in Chemical Engineering with 15 years of research experience"
     },
     {
-      name: "Michael Chen",
-      role: "Head of Operations",
+      name: "Rajeev Yadav",
+      role: "Head of Logistics",
       image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
       bio: "MBA with expertise in supply chain management and process optimization"
     },
     {
-      name: "Dr. Emily Rodriguez",
-      role: "Research Director",
+      name: "Vikas Kumar",
+      role: "Accountant",
       image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=300&h=300&fit=crop",
       bio: "Specialist in analytical chemistry and instrument development"
     },
     {
-      name: "David Kim",
-      role: "Technical Lead",
+      name: "Pramod Shukla",
+      role: "Sales Lead",
       image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop",
       bio: "Expert in automation systems and industrial IoT solutions"
     },
     {
-      name: "Lisa Wang",
-      role: "Quality Assurance Manager",
+      name: "Akash Kumar",
+      role: "Sales Executive",
       image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop",
       bio: "Certified Quality Manager with focus on regulatory compliance"
     },
     {
-      name: "James Wilson",
-      role: "Senior Engineer",
+      name: "Ayush Kumar",
+      role: "Sales Executive",
       image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=300&h=300&fit=crop",
       bio: "Specialized in industrial process control and optimization"
     },
     {
-      name: "Maria Garcia",
-      role: "Project Manager",
+      name: "Chandu",
+      role: "Delivery Manager",
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop",
       bio: "PMP certified with extensive experience in large-scale implementations"
     },

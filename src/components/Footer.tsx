@@ -22,8 +22,8 @@ const footerLinks = {
     title: "Support",
     links: [
       { name: "FAQ", href: "/faq" },
-      { name: "Privacy Policy", href: "/privacy" },
-      { name: "Terms of Service", href: "/terms" },
+      { name: "Privacy Policy", href: "/privacy-policy" },
+      { name: "Terms of Service", href: "/terms-of-service" },
     ],
   },
 };
@@ -100,13 +100,13 @@ export function Footer() {
             </p>
             <div className="flex space-x-6">
               <a
-                href="#"
+                href="/privacy-policy"
                 className="text-muted-foreground hover:text-primary transition-colors duration-200"
               >
                 Privacy Policy
               </a>
               <a
-                href="#"
+                href="/terms-of-service"
                 className="text-muted-foreground hover:text-primary transition-colors duration-200"
               >
                 Terms of Service
